@@ -31,8 +31,8 @@ git config --list
 ```
 ssh-keygen -t ed25519 
 ```
-    - Press enter for all prompts (accepts default options)
-    - This will put the ssh key in `~/.ssh/`
+- Press enter for all prompts (accepts default options)
+- This will put the ssh key in `~/.ssh/`
 
 7. Display your public key so we can provide it to GitHub:
 ```
@@ -59,5 +59,5 @@ Host github.com
     IdentitiesOnly yes
 ```
 
-    - You should see the message: "Hi <username>! You've successfully authenticated, but GitHub does not provide shell access."
+- You should see the message: "Hi <username>! You've successfully authenticated, but GitHub does not provide shell access."
 
