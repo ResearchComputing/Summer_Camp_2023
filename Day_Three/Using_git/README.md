@@ -58,6 +58,6 @@ Host github.com
     IdentityFile ~/.ssh/id_ed25519
     IdentitiesOnly yes
 ```
-    - You should see the message: "Hi <username>! You've successfully authenticated, but 
-GitHub does not provide shell access."
+
+    - You should see the message: "Hi <username>! You've successfully authenticated, but GitHub does not provide shell access."
 
