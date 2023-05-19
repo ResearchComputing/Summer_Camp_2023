@@ -59,5 +59,10 @@ the end portion "<username>@loginXX"
         IdentitiesOnly yes
     ```
 
+10. Verify that your ssh key has been correctly set up:
+    ```
+    ssh -T git@github.com
+    ```
+
     - You should see the message: "Hi \<username\>! You've successfully authenticated, but GitHub does not provide shell access."
 
