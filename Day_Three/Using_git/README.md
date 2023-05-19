@@ -59,5 +59,5 @@ the end portion "<username>@loginXX"
         IdentitiesOnly yes
     ```
 
-    - You should see the message: "Hi <username>! You've successfully authenticated, but GitHub does not provide shell access."
+    - You should see the message: "Hi \<username\>! You've successfully authenticated, but GitHub does not provide shell access."
 
