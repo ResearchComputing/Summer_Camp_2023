@@ -12,6 +12,10 @@ smoothly, please complete the following steps prior to day 3.
     ssh <username>@login.rc.colorado.edu
     ```
 
+    or 
+
+    Open up a terminal in Open OnDemand.
+
 3. Add your git user name
     ```
     git config --global user.name <github user name>
