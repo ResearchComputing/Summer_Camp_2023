@@ -1,4 +1,4 @@
-## Tutorial: Getting the most out of CU Research Computing resources
+## Tutorial: Analyzing resource use with Slurmtools and XDMoD
 
 ### Objectives: 
 
@@ -37,9 +37,7 @@ _We will explore two groupings of tools:_
   * [Get a CURC Account for CU Anschutz or RMACC persons](https://curc.readthedocs.io/en/latest/access/rmacc.html)
 * Some basic Linux knowledge will be useful but you can get by without
 
-### Tutorials:
-
-#### Command line tools: the `slurmtools` module
+### Part 1: Command line tools: the `slurmtools` module
 
 __Step 1__: Login 
 
@@ -283,7 +281,7 @@ This output tells me that:
 * 4.12 GB RAM was used of 239.38 GB RAM reserved (1.72%). Most jobs (though not this one!) are "cpu bound" so the memory inefficiency is not a major issue.
 
 
-#### Web-based tools: https://xdmod.rc.colorado.edu
+### Part 2: Web-based tools: https://xdmod.rc.colorado.edu
 
 
 All CURC users have access to XDMoD (CU Boulder, CSU and RMACC). At this time, login is only supported for CU Boulder users.  Non-CU Boulder users may still query all of the statistics available to CU Boulder users, they just won't have the ability to personalize metrics. 
