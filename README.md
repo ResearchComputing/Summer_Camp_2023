@@ -83,7 +83,7 @@ Presenter: Layla Freeborn, Chat: Andy Monaghan
 14:15-14:30 Break
 
 14:30-16:30 Using Git to share and improve your work (120 Min)
-Presenter Brandon Reyes, Chat: Coach or Andrew Wilson
+Presenter Brandon Reyes, Chat: Dylan Gottlieb or Andrew Wilson
 
 ### Day 4: Using the Cloud + Wrapping Up
 
