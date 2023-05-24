@@ -62,6 +62,38 @@ Parallelization that is done on a single node (computer), such that the processe
 
 <img src="images/shared_memory_parallelization.png" width="50%" />
 
+Software designed specifically for shared memory parallelization often will automatically parallelize when the user runs the software executable, if the machine has multiple cores. Lets use the OpenMP program `openmp_hello.cpp` in the parallel_examples subdirectory to explore more: 
+
+Start a 2 core job on alpine (assumes you are already logged in)
+```bash
+module load slurm/alpine
+sinteractive -N 1 -n 2 --partition=atesting --qos=testing --time=30:00
+```
+
+...this should start a short testing job in a few moments.  Now compile the code:
+
+```bash
+module load gcc/11.2.0
+cd /projects/$USER
+git clone https://github.com/ResearchComputing/Summer_Camp_2023
+cd Summer_Camp_2023/edit/main/Day_Three/parallel/parallel_examples/
+g++ openmp_hello.cpp -o openmp_hello.exe -fopenmp
+```
+
+...now run the code: 
+```bash
+export OMP_NUM_THREADS=1
+./openmp_hello.exe
+```
+
+What happened? Now try again, this time with 2 threads: 
+```bash
+export OMP_NUM_THREADS=2
+./openmp_hello.exe
+```
+What was the result? 
+
+
 #### Internal Parallelization type 2: Distributed memory parallelization
 
 Parallelization that is done on a multiple nodes (computers), such that the processes cannot all share a common memory (RAM). Therfore they must pass information over high speed networks that connect the nodes. Distributed memory parallelization is often called "MPI" (message passing interface).
@@ -70,11 +102,18 @@ Parallelization that is done on a multiple nodes (computers), such that the proc
 
 #### Additonal notes on Internal parallelization
 
-* Software designed specifically for shared memory parallelization often will automatically parallelize when the user runs the software executable, if the machine has multiple cores. Example: 
+* Software designed specifically for shared memory parallelization often will automatically parallelize when the user runs the software executable, if the machine has multiple cores. 
+ * Example: see `openmp_hello.cpp` in the parallel_examples subdirectory.  Within a 2-4 core single-node job on Alpine, one can experiment: 
 
-`bash
-module
-* Software designed for distributed memory parallelization usually must be invoked at the command line by preceeding the software executable name with `mpirun`.
+```bash
+module load gcc/11.2.0
+cd /projects/$USER
+git clone https://github.com/ResearchComputing/Summer_Camp_2023
+cd Summer_Camp_2023/edit/main/Day_Three/parallel/parallel_examples/
+
+g++ parallel_hello_world.cpp -o parrallel_hello_world.exe -fopenmp
+
+* Software designed for distributed memory parallelization usually must be invoked at the command line by preceeding the software executable name with `mpirun`. 
  * On HPC systems, including Alpine, software modules such as Intel MPI and OpenMPI must be loaded in order to invoke MPI executable.
 
 ## Profiling
