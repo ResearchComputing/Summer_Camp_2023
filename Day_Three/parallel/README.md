@@ -34,7 +34,7 @@ _Cons:_
 * Only works for tasks that are independent of each other
 
 _Tools for load balancing on Alpine_
-* The [CURC Load Balancer](https://curc.readthedocs.io/en/latest/software/loadbalancer.html)
+* [CURC Load Balancer](https://curc.readthedocs.io/en/latest/software/loadbalancer.html)
 * [Gnu Parallel](https://curc.readthedocs.io/en/latest/software/GNUParallel.html)
 
 ### Internal Parallelization
@@ -64,10 +64,10 @@ Parallelization that is done on a single node (computer), such that the processe
 
 Software designed specifically for shared memory parallelization often will automatically parallelize when the user runs the software executable, if the machine has multiple cores. Lets use the OpenMP program `openmp_hello.cpp` in the parallel_examples subdirectory to explore more: 
 
-Start a 2 core job on alpine (assumes you are already logged in)
+Start a 2 core job on a single Alpine node (assumes you are already logged in)
 ```bash
 module load slurm/alpine
-sinteractive -N 1 -n 2 --partition=atesting --qos=testing --time=30:00
+sinteractive -N 1 -n 4 --partition=atesting --qos=testing --time=30:00
 ```
 
 ...this should start a short testing job in a few moments.  Now compile the code:
@@ -76,7 +76,7 @@ sinteractive -N 1 -n 2 --partition=atesting --qos=testing --time=30:00
 module load gcc/11.2.0
 cd /projects/$USER
 git clone https://github.com/ResearchComputing/Summer_Camp_2023
-cd Summer_Camp_2023/edit/main/Day_Three/parallel/parallel_examples/
+cd Summer_Camp_2023/Day_Three/parallel/parallel_examples/
 g++ openmp_hello.cpp -o openmp_hello.exe -fopenmp
 ```
 
@@ -86,13 +86,12 @@ export OMP_NUM_THREADS=1
 ./openmp_hello.exe
 ```
 
-What happened? Now try again, this time with 2 threads: 
+What happened? Now try again, this time with 4 threads: 
 ```bash
-export OMP_NUM_THREADS=2
+export OMP_NUM_THREADS=4
 ./openmp_hello.exe
 ```
 What was the result? 
-
 
 #### Internal Parallelization type 2: Distributed memory parallelization
 
@@ -100,22 +99,38 @@ Parallelization that is done on a multiple nodes (computers), such that the proc
 
 <img src="images/distributed_memory_parallelization.png" width="50%" />
 
-#### Additonal notes on Internal parallelization
+Software designed for distributed memory parallelization usually must be invoked at the command line by preceeding the software executable name with `mpirun`. Lets use the MPI program `mpi_hello.cpp` in the parallel_examples subdirectory to explore more: 
 
-* Software designed specifically for shared memory parallelization often will automatically parallelize when the user runs the software executable, if the machine has multiple cores. 
- * Example: see `openmp_hello.cpp` in the parallel_examples subdirectory.  Within a 2-4 core single-node job on Alpine, one can experiment: 
+Start a 4 core job across 2 Alpine nodes (assumes you are already logged in)
+```bash
+module load slurm/alpine
+sinteractive -N 2 --nasks-per-node=2 --partition=atesting --qos=testing --time=30:00
+```
+
+...this should start a short testing job in a few moments.  Now compile the code:
 
 ```bash
 module load gcc/11.2.0
+module load openmpi/4.1.1
 cd /projects/$USER
 git clone https://github.com/ResearchComputing/Summer_Camp_2023
-cd Summer_Camp_2023/edit/main/Day_Three/parallel/parallel_examples/
+cd Summer_Camp_2023/Day_Three/parallel/parallel_examples/
+mpic++ mpi_hello.cpp -o mpi_hello.exe
+```
 
-g++ parallel_hello_world.cpp -o parrallel_hello_world.exe -fopenmp
+...now run the code: 
+```bash
+mpirun ./mpi_hello.exe
+```
 
-* Software designed for distributed memory parallelization usually must be invoked at the command line by preceeding the software executable name with `mpirun`. 
- * On HPC systems, including Alpine, software modules such as Intel MPI and OpenMPI must be loaded in order to invoke MPI executable.
+What happened? Now try again, this time specifying the number of threads: 
+```bash
+mpirun -n 2 ./openmp_hello.exe
+```
+What was the result? 
 
+
+ 
 ## Profiling
 
 ### _Profiling is measuring the performance of your code_
