@@ -56,27 +56,58 @@ _Cons:_
 * Unique problems may not have software available, requiring you to parallelize the code yourself
 * Most internally-parallelized jobs do not scale linearly due to message passing overhead
 
+
+__Now let's login for some hands-on exercises__
+
+_For CU Boulder and CSU users:_
+
+Login as you normally would using your identikey (CU) or EID (CSU):
+
+```bash
+ssh ralphie@login.rc.colorado.edu #CU
+...or
+ssh cam@colostate.edu@login.rc.colorado.edu #CSU
+```
+...and then accept the Duo push to your phone to complete login.
+
+_For CU Anschutz and RMACC users:_
+
+* Navigate to https://ondemand-rmacc.rc.colorado.edu
+* Choose the `ACCESS CI (XSEDE)` Identity Provider
+* Login with your ACCESS or XSEDE username and password
+* Accept the Duo push to your phone to complete login
+* Select the `Clusters` tab at the top and choose `>Alpine Shell`
+
+Now, once logged into a CURC terminal, start a job as follows: 
+
+Start a 4 core interactive job across 2 Alpine nodes (assumes you are already logged in)
+```bash
+module load slurm/alpine
+sinteractive --nodes=2 --nasks-per-node=2 --partition=amilan --reservation=sc_parallel --time=1:00:00
+```
+
+Now let's download the exercises
+```bash
+cd /scratch/alpine/$USER
+git clone https://github.com/ResearchComputing/Summer_Camp_2023
+```
+
 #### Internal Parallelization type 1: Shared memory parallelization
 
 Parallelization that is done on a single node (computer), such that the processes can all share a common memory (RAM).  Shared memory parallelization is often referred to as "OpenMP" or "multithreading".
 
 <img src="images/shared_memory_parallelization.png" width="50%" />
 
-Software designed specifically for shared memory parallelization often will automatically parallelize when the user runs the software executable, if the machine has multiple cores. Lets use the OpenMP program `openmp_hello.cpp` in the parallel_examples subdirectory to explore more: 
+Software designed specifically for shared memory parallelization often will automatically parallelize when the user runs the software executable, if the machine has multiple cores. Lets use the OpenMP program `openmp_hello.cpp` in the _parallel_examples_ subdirectory to explore more: 
 
-Start a 2 core job on a single Alpine node (assumes you are already logged in)
 ```bash
-module load slurm/alpine
-sinteractive -N 1 -n 4 --partition=atesting --qos=testing --time=30:00
+cd /scratch/alpine/$USER/Summer_Camp_2023/Day_Three/parallel/parallel_examples/
+ls
 ```
 
-...this should start a short testing job in a few moments.  Now compile the code:
-
+Now
 ```bash
 module load gcc/11.2.0
-cd /projects/$USER
-git clone https://github.com/ResearchComputing/Summer_Camp_2023
-cd Summer_Camp_2023/Day_Three/parallel/parallel_examples/
 g++ openmp_hello.cpp -o openmp_hello.exe -fopenmp
 ```
 
@@ -99,22 +130,16 @@ Parallelization that is done on a multiple nodes (computers), such that the proc
 
 <img src="images/distributed_memory_parallelization.png" width="50%" />
 
-Software designed for distributed memory parallelization usually must be invoked at the command line by preceeding the software executable name with `mpirun`. Lets use the MPI program `mpi_hello.cpp` in the parallel_examples subdirectory to explore more: 
+Software designed for distributed memory parallelization usually must be invoked at the command line by preceeding the software executable name with `mpirun`. Lets use the MPI program `mpi_hello.cpp` in the _parallel_examples_ subdirectory to explore more: 
 
-Start a 4 core job across 2 Alpine nodes (assumes you are already logged in)
 ```bash
-module load slurm/alpine
-sinteractive -N 2 --nasks-per-node=2 --partition=atesting --qos=testing --time=30:00
+cd /scratch/alpine/$USER/Summer_Camp_2023/Day_Three/parallel/parallel_examples/
+ls
 ```
-
-...this should start a short testing job in a few moments.  Now compile the code:
 
 ```bash
 module load gcc/11.2.0
 module load openmpi/4.1.1
-cd /projects/$USER
-git clone https://github.com/ResearchComputing/Summer_Camp_2023
-cd Summer_Camp_2023/Day_Three/parallel/parallel_examples/
 mpic++ mpi_hello.cpp -o mpi_hello.exe
 ```
 
