@@ -11,6 +11,14 @@ _To gain an understanding of:_
 * What code __scaling__ is and how to get started
 
 ---
+### Prerequisites:
+
+* You have a CURC account
+  * [Get a CURC Account for CU Boulder or CSU persons](https://rcamp.rc.colorado.edu/accounts/account-request/create/organization)
+  * [Get a CURC Account for CU Anschutz or RMACC persons](https://curc.readthedocs.io/en/latest/access/rmacc.html)
+* Some basic Linux knowledge will be useful but you can get by without
+
+---
 ## Parallelization
 
 Sometimes problems become too large to solve in a reasonable amount of time using a single computing processor.  Fortunately, many types of problems can be decomposed into smaller pieces that can be solved simultaneously by distributing them across many processors. Examples include processing thousands of images from an electron microscope, or using a model to predict the weather at millions of points across North America. 
