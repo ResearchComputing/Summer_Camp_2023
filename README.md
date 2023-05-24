@@ -66,7 +66,7 @@ Presenter: Trevor Hall, Chat: Layla Freeborn
 8:00-9:00 Zoom Office hours
 Andy Monaghan, Dylan Perkins
 
-9:00-10:00 Troubleshooting and analyzing with XDMOD (60 minutes)
+9:00-10:00 Analyzing resource use with Slurmtools and XDMOD (60 minutes)
 Presenter: Andy Monaghan, Chat: Layla Freeborn
 
 10:00-10:15 Break
