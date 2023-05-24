@@ -42,6 +42,7 @@ _Cons:_
 * Only works for tasks that are independent of each other
 
 _Tools for load balancing on Alpine_
+* [Slurm job arrays](https://hpc.nmsu.edu/discovery/slurm/job-array/)
 * [CURC Load Balancer](https://curc.readthedocs.io/en/latest/software/loadbalancer.html)
 * [Gnu Parallel](https://curc.readthedocs.io/en/latest/software/GNUParallel.html)
 
