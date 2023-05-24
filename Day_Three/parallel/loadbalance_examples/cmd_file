@@ -1,0 +1,5 @@
+python cars_mpg.py mustang 25
+python cars_mpg.py pinto 30
+python cars_mpg.py chevette 33
+python cars_mpg.py nova 21
+python cars_mpg.py cutlass 23
