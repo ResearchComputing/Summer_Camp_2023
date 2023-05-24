@@ -92,7 +92,7 @@ Now, once logged into a CURC terminal, start a job as follows:
 Start a 4 core interactive job across 2 Alpine nodes (assumes you are already logged in)
 ```bash
 module load slurm/alpine
-sinteractive --nodes=2 --nasks-per-node=2 --partition=amilan --reservation=sc_parallel --time=1:00:00
+sinteractive --nodes=2 --ntasks-per-node=2 --partition=amilan --reservation=sc_parallel --time=1:00:00
 ```
 
 Now let's download the exercises
