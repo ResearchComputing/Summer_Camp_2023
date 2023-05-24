@@ -30,35 +30,42 @@ _We will explore two groupings of tools:_
 
 ---
 
+### Prerequisites:
+
+* You have a CURC account
+  * [Get a CURC Account for CU Boulder or CSU persons](https://rcamp.rc.colorado.edu/accounts/account-request/create/organization)
+  * [Get a CURC Account for CU Anschutz or RMACC persons](https://curc.readthedocs.io/en/latest/access/rmacc.html)
+* Some basic Linux knowledge will be useful but you can get by without
+
 ### Tutorials:
 
 #### Command line tools: the `slurmtools` module
 
-__Step 1__: If you have a CURC account, login as you normally would using your identikey and Duo from a terminal: 
+__Step 1__: Login 
+
+_For CU Boulder and CSU users:_
+
+Login as you normally would using your identikey (CU) or EID (CSU):
 
 ```bash
-ssh ralphie@login.rc.colorado.edu
+ssh ralphie@login.rc.colorado.edu #CU
+...or
+ssh cam@colostate.edu@login.rc.colorado.edu #CSU
 ```
-or, if you _do not_ have a CURC account, ask the instructor for a temporary username and password and login as follows:
+...and then accept the Duo push to your phone to complete login.
 
-```bash
-ssh user00<NN>@tlogin1.rc.colorado.edu
-```
+_For CU Anschutz and RMACC users:_
 
-__Note__: _Don't have a terminal application on your computer? No problem!  You can login to CURC via our browser-based portal, [CURC Open OnDemand](https://ondemand.rc.colorado.edu)!  Once logged in, choose the "Clusters" option and open a terminal shell for the resource you want to use (Alpine, Summit, or Blanca).  [Addtional Documentation](https://curc.readthedocs.io/en/latest/gateways/OnDemand.html)_
+* Navigate to https://ondemand-rmacc.rc.colorado.edu
+* Choose the `ACCESS CI (XSEDE)` Identity Provider
+* Login with your ACCESS or XSEDE username and password
+* Accept the Duo push to your phone to complete login
+* Select the `Clusters` tab at the top and choose `>Alpine Shell`
 
-__Step 2__: Load the slurm module for either Alpine, Summit, or Blanca (whichever HPC resource you want to query metrics about):
+__Step 2__: Load the slurm module for either Alpine, Summit, or Blanca (whichever HPC resource you want to query metrics about).  For this tutorial, we will all load the slurm module for Alpine:
 
 ```bash
 module load slurm/alpine
-```
-or
-```bash
-module load slurm/summit
-```
-or
-```bash
-module load slurm/blanca
 ```
 
 __Step 3__: Load the `slurmtools` module:
@@ -67,25 +74,18 @@ __Step 3__: Load the `slurmtools` module:
 module load slurmtools
 ```
 
-...you'll see the following informational message:
+By loading the `slurmtools` module, five commands become available: 
 
-```
-You have sucessfully loaded slurmtools, a collection of functions
- to assess recent usage statistics. Available commands include:
+ * `suacct` (SU usage for each user of a specified account over N days)
 
- 'suacct' (SU usage for each user of a specified account over N days)
+ * `suuser` (SU usage for a specfied user over N days)
 
- 'suuser' (SU usage for a specfied user over N days)
+ * `seff` (CPU and RAM efficiency for a specified job)
 
- 'seff' (CPU and RAM efficiency for a specified job)
+ * `jobstats` (job statistics for all jobs run by a specified user over N days)
 
- 'jobstats' (job statistics for all jobs run by a specified user over N days)
+ * `levelfs` (current fair share priority for a specified user)
 
- 'levelfs' (current fair share priority for a specified user)
-
-
- Type any command without arguments for usage instructions
- ```
 
 __Step 4__: Let's get some metrics!
 
@@ -134,7 +134,7 @@ Usage: suacct [account_name] [days, default 30]
 Hint: suacct ucb-general 15
 ```
 
-Check `admin` account usage over past 180 days:
+Check `admin` account usage over past 90 days:
 ```bash
 suacct admin 90
 ```
@@ -199,12 +199,15 @@ Type the command name for usage hint:
 levelfs
 ```
 ```
-Purpose: This function shows the current fair share priority of a specified user.
-A value of 1 indicates average priority compared to other users in an account.
-A value of < 1 indicates lower than average priority
+Purpose: This function shows the current fair share priority of a specified user and their institution.
+A value of 1 indicates actual usage matches expected usage.
+A value of < 1 indicates actual usage is more than expected usage.
 	(longer than average queue waits)
-A value of > 1 indicates higher than average priority
+A value of > 1 indicates actual usage is less than expected usage
 	(shorter than average queue waits)
+Note: It is possible to have high priority in a given account
+      and low priority for your institution as a whole, and vise-versa.
+      Both numbers affect your queue wait times.
 
 Usage: levelfs [userid]
 Hint: levelfs ralphie
@@ -212,28 +215,29 @@ Hint: levelfs ralphie
 
 Check my fair share priority:
 ```bash
-levelfs monaghaa
+levelfs monaghaa@colostate.edu
 ```
 ```
-monaghaa
-admin LevelFS: inf
-ucb-general LevelFS: 44.796111
-tutorial1 LevelFS: inf
-ucb-testing LevelFS: inf
+LevelFS for user monaghaa@colostate.edu and institution csu:
+
+Account             LevelFS_User        LevelFS_Inst
+-----------------------------------------------------
+csu-general         78572.357476        0.845711
 ```
 
 This output tells me:
-* I haven't used `admin`, `tutorial1`, or `ucb-testing` for more than a month, and therefore I have very high ("infinite") priority. 
-* I have used `ucb-general` but not much. My priority is >> `, therefore I can expect lower-than-average queue waits compare to average ucb-general waits.
+* I probably haven't used `csu-general` for more than a month, and therefore I have very high (>>1) priority in `csu-general`. 
+* However CSU as an institution has used more than expected for the past month, and therfore overall priority for CSU users will be lower than average for the system.
 
 
 ___NOTE___
 
 What is "Priority"?  
 
-* Your priority is a number between 0.0 --> 1.0 that defines your relative placement in the queue of scheduled jobs
+* Your priority is a number between 0.0 --> infinity that defines your relative placement in the queue of scheduled jobs
 * Your priority is computed each time a job is scheduled and reflects the following factors:
 	* Your "Fair Share priority" (the ratio of resources you are allocated versus those you have consumed for a given account)
+	* Your institution's "Fair Share priority"
 	* Your job size (slightly larger jobs have higher priority)
 	* Your time spent in the queue (jobs gain priority the longer they wait)
 	* The partition and qos you choose (this is a minor consideration on CURC systems)
