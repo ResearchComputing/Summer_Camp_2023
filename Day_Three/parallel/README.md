@@ -105,7 +105,7 @@ cd /scratch/alpine/$USER/Summer_Camp_2023/Day_Three/parallel/parallel_examples/
 ls
 ```
 
-Now
+...now compile the code:
 ```bash
 module load gcc/11.2.0
 g++ openmp_hello.cpp -o openmp_hello.exe -fopenmp
@@ -136,7 +136,7 @@ Software designed for distributed memory parallelization usually must be invoked
 cd /scratch/alpine/$USER/Summer_Camp_2023/Day_Three/parallel/parallel_examples/
 ls
 ```
-
+...now compile the code:
 ```bash
 module load gcc/11.2.0
 module load openmpi/4.1.1
