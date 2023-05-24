@@ -1,13 +1,81 @@
-# Tutorial: A Quick Start to Profiling and Scaling 
+# Tutorial: Maximizing efficiency using parallelization, with an introduction to profiling and scaling
 
 ## Objectives: 
 
-_To gain a beginners understanding of:_
+_To gain an understanding of:_
 
+* Basic parallelization concepts
+* How parallelization is implemented on Alpine
+* How to invoke parallelization on Alpine
 * What code __profiling__ is and how to get started
 * What code __scaling__ is and how to get started
 
 ---
+## Parallelization
+
+Sometimes problems become too large to solve in a reasonable amount of time using a single computing processor.  Fortunately, many types of problems can be decomposed into smaller pieces that can be solved simultaneously by distributing them across many processors. Examples include processing thousands of images from an electron microscope, or using a model to predict the weather at millions of points across North America. 
+
+### External Parallelization
+
+In this scenario, the user has lots of similar serial (single-core) tasks they need to accomplish. Rather than refine the code itself, the user runs lots of simultaneious iterations of the code, taking advantage of the many processors available on high performance computers. This method is sometimes called "load balancing".
+
+<img src="images/external_parallelization.png" width="50%" />
+
+_Examples:_
+* Monte Carlo simulations
+* Image processing
+
+_Pros:_ 
+* Incredibly easy
+* Scales very well
+
+_Cons:_ 
+* Requires a bit more hands-on approach to keep track of 100s-to-1000s of jobs
+* Only works for tasks that are independent of each other
+
+_Tools for load balancing on Alpine_
+* The [CURC Load Balancer](https://curc.readthedocs.io/en/latest/software/loadbalancer.html)
+* [Gnu Parallel](https://curc.readthedocs.io/en/latest/software/GNUParallel.html)
+
+### Internal Parallelization
+
+In this scenario, the user implements the parallelizaton from within the code, perhaps because the tasks are dependent on one another and need to communicate with each other (pass messages) during simulations. This method requires modifying the code itself. 
+
+<img src="images/internal_parallelization.png" width="50%" />
+
+_Examples:_
+* Climate models
+* Molecular dynamics simulations
+
+_Pros:_ 
+* Enables effecient solutions for complex, interdependent systems
+* Simpler to manage jobs (one job does lots of tasks)
+* Many software packages that do internal parallelization are already available
+
+_Cons:_ 
+* Unique problems may not have software available, requiring you to parallelize the code yourself
+* Most internally-parallelized jobs do not scale linearly due to message passing overhead
+
+#### Internal Parallelization type 1: Shared memory parallelization
+
+Parallelization that is done on a single node (computer), such that the processes can all share a common memory (RAM).  Shared memory parallelization is often referred to as "OpenMP" or "multithreading".
+
+<img src="images/shared_memory_parallelization.png" width="50%" />
+
+#### Internal Parallelization type 2: Distributed memory parallelization
+
+Parallelization that is done on a multiple nodes (computers), such that the processes cannot all share a common memory (RAM). Therfore they must pass information over high speed networks that connect the nodes. Distributed memory parallelization is often called "MPI" (message passing interface).
+
+<img src="images/distributed_memory_parallelization.png" width="50%" />
+
+#### Additonal notes on Internal parallelization
+
+* Software designed specifically for shared memory parallelization often will automatically parallelize when the user runs the software executable, if the machine has multiple cores. Example: 
+
+`bash
+module
+* Software designed for distributed memory parallelization usually must be invoked at the command line by preceeding the software executable name with `mpirun`.
+ * On HPC systems, including Alpine, software modules such as Intel MPI and OpenMPI must be loaded in order to invoke MPI executable.
 
 ## Profiling
 
@@ -66,8 +134,8 @@ let's inspect the code...it uses the ___python___ `time` package and some simple
 ### Software-based profiling
 
 * Vendor-based software. CURC has:
-  * [Arm-Forge](https://developer.arm.com/Tools%20and%20Software/Arm%20Forge) (formerly Allinea)
   * [Intel VTune](https://www.intel.com/content/www/us/en/develop/documentation/vtune-help/top.html) (basic profiling), [Advisor](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-advisor/top.html) (vectorization/threading), [Trace Analyzer](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-itac/top.html) (MPI)
+  * [Arm-Forge](https://developer.arm.com/Tools%20and%20Software/Arm%20Forge) (formerly Allinea)
 * Community-based software that you can download for free, install on your own
   * [GNU Profile](https://ftp.gnu.org/old-gnu/Manuals/gprof-2.9.1/html_mono/gprof.html) (`gprof`)
   * [AMD uprof](https://developer.amd.com/amd-uprof)
@@ -80,21 +148,30 @@ Let's use _Vtune_ to profile an mpi program written in ___c___ called `wave.c`. 
 
 Step 1: Login
 
-_Option A:_ If you have a CURC account:
-```
-ssh -X <yourusername>@login.rc.colorado.edu
-```
+__Note:__ For this exercise yuou will need an X11 client on your laptop/desktop computer in order to forward graphics from Alpine back to your local machine. 
+ * Mac: [Xquartz](https://www.xquartz.org)
+ * Windows: [PuTTY](https://www.putty.org)
 
-_Option B:_ If you do not have a CURC account, get a temporary username and password from the instructor:
+_For CU Boulder and CSU users:_
+
+Login as you using your identikey (CU) or EID (CSU), adding an `-X` to the `ssh` command:
+
+```bash
+ssh -X ralphie@login.rc.colorado.edu #CU
+...or
+ssh -X cam@colostate.edu@login.rc.colorado.edu #CSU
 ```
-ssh -X userNNNN@tlogin1.rc.colorado.edu
-```
+...and then accept the Duo push to your phone to complete login.
+
+_For CU Anschutz and RMACC users:_
+
+* _X11 login option coming soon!_
 
 Step 2: Start an interactive job with 4 cores. 
 
 ```
 module load slurm/alpine
-sinteractive -N 1 -n 4 -t 60 --reservation=tutorial
+sinteractive -N 1 -n 4 -t 60 --reservation=sc_parallel
 ```
 
 Step 3: Load the modules you need:
