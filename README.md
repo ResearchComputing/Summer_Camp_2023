@@ -72,7 +72,7 @@ Presenter: Andy Monaghan, Chat: Layla Freeborn
 10:00-10:15 Break
 
 
- 10:15-11:45 maximizing efficiency using parallelization, with an introduction to profiling and scaling (90 minutes)
+ 10:15-11:45 Maximizing efficiency using parallelization, with an introduction to profiling and scaling (90 minutes)
 Presenter Andy Monaghan, Chat: Brandon Reyes
 
 11:45-12:45 Lunch
